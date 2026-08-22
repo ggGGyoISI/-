@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="
+        width=device-width,
+        initial-scale=1,
+        maximum-scale=1,
+        user-scalable=no,
+        viewport-fit=cover
+    "
+>
+
+<title>Доброй ночи, Полиночка 🌙</title>
+
+<style>
+
+/* =====================================================
+   ОСНОВА
+===================================================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+
+    width:100%;
+    height:100%;
+
+    overflow:hidden;
+
+    background:#05081c;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    touch-action:manipulation;
+}
+
+body{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    overscroll-behavior:none;
+}
+
+
+/* =====================================================
+   ПРИЛОЖЕНИЕ
+===================================================== */
+
+.app{
+
+    position:relative;
+
+    width:100%;
+    height:100%;
+
+    max-width:500px;
+
+    overflow:hidden;
+
+    isolation:isolate;
+
+    background:
+
+        radial-gradient(
+            circle at 50% 8%,
+            rgba(100,115,220,.28),
+            transparent 32%
+        ),
+
+        radial-gradient(
+            circle at 10% 85%,
+            rgba(183,91,175,.18),
+            transparent 35%
+        ),
+
+        linear-gradient(
+            180deg,
+            #070a22 0%,
+            #0b1030 48%,
+            #171035 100%
+        );
+}
+
+
+/* =====================================================
+   СВЕЧЕНИЕ
+===================================================== */
+
+.app::before{
+
+    content:"";
+
+    position:absolute;
+
+    width:320px;
+    height:320px;
+
+    top:-130px;
+    left:50%;
+
+    transform:translateX(-50%);
+
+    border-radius:50%;
+
+    background:
+
+        radial-gradient(
+            circle,
+            rgba(150,160,255,.18),
+            transparent 70%
+        );
+
+    filter:blur(25px);
+
+    pointer-events:none;
+
+    z-index:0;
+}
+
+
+/* =====================================================
+   ЗВЁЗДЫ
+===================================================== */
+
+.stars{
+
+    position:absolute;
+
+    inset:0;
+
+    overflow:hidden;
+
+    pointer-events:none;
+
+    z-index:1;
+}
+
+.star{
+
+    position:absolute;
+
+    width:2px;
+    height:2px;
+
+    border-radius:50%;
+
+    background:white;
+
+    opacity:.35;
+
+    animation:
+        twinkle
+        ease-in-out
+        infinite;
+}
+
+@keyframes twinkle{
+
+    0%,100%{
+
+        opacity:.15;
+
+        transform:scale(.7);
+    }
+
+    50%{
+
+        opacity:.9;
+
+        transform:scale(1.5);
+    }
+}
+
+
+/* =====================================================
+   ЛУНА
+===================================================== */
+
+.moon{
+
+    position:absolute;
+
+    top:
+        max(
+            55px,
+            env(safe-area-inset-top)
+        );
+
+    right:-45px;
+
+    width:145px;
+    height:145px;
+
+    border-radius:50%;
+
+    background:
+
+        radial-gradient(
+            circle at 35% 30%,
+            #fffef3 0%,
+            #f7f3d5 55%,
+            #d7d1ad 100%
+        );
+
+    box-shadow:
+
+        0 0 35px
+        rgba(255,248,210,.28),
+
+        0 0 100px
+        rgba(255,248,210,.12);
+
+    animation:
+        moonFloat
+        6s
+        ease-in-out
+        infinite;
+
+    z-index:2;
+}
+
+.moon::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:145px;
+    height:145px;
+
+    border-radius:50%;
+
+    top:-14px;
+    left:-26px;
+
+    background:#080b25;
+}
+
+@keyframes moonFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+    }
+
+    50%{
+
+        transform:translateY(8px);
+    }
+}
+
+
+/* =====================================================
+   ОБЛАКА
+===================================================== */
+
+.cloud{
+
+    position:absolute;
+
+    width:150px;
+    height:28px;
+
+    border-radius:50px;
+
+    background:
+        rgba(255,255,255,.035);
+
+    filter:blur(1px);
+
+    pointer-events:none;
+
+    z-index:2;
+
+    animation:
+        cloudMove
+        linear
+        infinite;
+}
+
+.cloud::before,
+.cloud::after{
+
+    content:"";
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:inherit;
+}
+
+.cloud::before{
+
+    width:55px;
+    height:55px;
+
+    left:25px;
+    bottom:3px;
+}
+
+.cloud::after{
+
+    width:75px;
+    height:75px;
+
+    left:65px;
+    bottom:0;
+}
+
+.cloud-1{
+
+    top:31%;
+
+    left:-180px;
+
+    animation-duration:42s;
+}
+
+.cloud-2{
+
+    top:55%;
+
+    left:-220px;
+
+    opacity:.45;
+
+    animation-duration:55s;
+
+    animation-delay:9s;
+}
+
+@keyframes cloudMove{
+
+    from{
+
+        transform:translateX(0);
+    }
+
+    to{
+
+        transform:translateX(700px);
+    }
+}
+
+
+/* =====================================================
+   ПАДАЮЩИЕ ЗВЁЗДЫ
+===================================================== */
+
+.shooting-star{
+
+    position:absolute;
+
+    width:90px;
+    height:1px;
+
+    background:
+
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.8)
+        );
+
+    transform:rotate(-35deg);
+
+    opacity:0;
+
+    pointer-events:none;
+
+    z-index:2;
+
+    animation:
+        shooting
+        8s
+        linear
+        infinite;
+}
+
+.shooting-star:nth-child(1){
+
+    top:22%;
+    left:12%;
+
+    animation-delay:2s;
+}
+
+.shooting-star:nth-child(2){
+
+    top:45%;
+    left:65%;
+
+    animation-delay:5s;
+}
+
+@keyframes shooting{
+
+    0%{
+
+        transform:
+            translate(0,0)
+            rotate(-35deg);
+
+        opacity:0;
+    }
+
+    8%{
+
+        opacity:.8;
+    }
+
+    20%{
+
+        transform:
+            translate(190px,140px)
+            rotate(-35deg);
+
+        opacity:0;
+    }
+
+    100%{
+
+        opacity:0;
+    }
+}
+
+
+/* =====================================================
+   ЭКРАНЫ
+===================================================== */
+
+.screen{
+
+    position:absolute;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    padding:
+
+        calc(
+            30px +
+            env(safe-area-inset-top)
+        )
+
+        22px
+
+        calc(
+            55px +
+            env(safe-area-inset-bottom)
+        );
+
+    text-align:center;
+
+    opacity:0;
+
+    visibility:hidden;
+
+    transform:
+        translateY(24px)
+        scale(.97);
+
+    transition:
+
+        opacity .65s ease,
+
+        transform .7s
+        cubic-bezier(.23,1,.32,1),
+
+        visibility .65s;
+
+    z-index:10;
+}
+
+.screen.active{
+
+    opacity:1;
+
+    visibility:visible;
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+.inner{
+
+    width:100%;
+
+    max-width:390px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    position:relative;
+
+    z-index:5;
+}
+
+
+/* =====================================================
+   ТИПОГРАФИКА
+===================================================== */
+
+.small-label{
+
+    margin-bottom:14px;
+
+    color:#aeb8e8;
+
+    font-size:.62rem;
+
+    letter-spacing:4px;
+
+    text-transform:uppercase;
+}
+
+h1,
+h2{
+
+    color:#fff;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-weight:600;
+
+    text-shadow:
+        0 8px 30px
+        rgba(130,145,255,.22);
+}
+
+h1{
+
+    font-size:
+        clamp(
+            2.15rem,
+            9vw,
+            2.75rem
+        );
+
+    line-height:1.12;
+}
+
+h2{
+
+    font-size:
+        clamp(
+            1.75rem,
+            8vw,
+            2.2rem
+        );
+
+    line-height:1.2;
+}
+
+.subtitle{
+
+    margin-top:17px;
+
+    color:#b9bfdf;
+
+    font-size:.92rem;
+
+    line-height:1.7;
+
+    font-weight:300;
+}
+
+.pink{
+
+    color:#ffabc5;
+}
+
+
+/* =====================================================
+   КНОПКИ
+===================================================== */
+
+.btn{
+
+    width:100%;
+
+    max-width:320px;
+
+    min-height:54px;
+
+    border:0;
+
+    border-radius:50px;
+
+    padding:15px 22px;
+
+    margin-top:25px;
+
+    color:white;
+
+    font-size:.94rem;
+
+    font-weight:600;
+
+    background:
+
+        linear-gradient(
+            135deg,
+            #ad78e8,
+            #e487ad
+        );
+
+    box-shadow:
+
+        0 12px 35px
+        rgba(181,108,221,.22),
+
+        inset 0 1px 0
+        rgba(255,255,255,.2);
+
+    cursor:pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease;
+}
+
+.btn:active{
+
+    transform:scale(.95);
+}
+
+
+/* =====================================================
+   ЭКРАН 1
+===================================================== */
+
+.sleepy{
+
+    font-size:3.8rem;
+
+    margin-bottom:15px;
+
+    animation:
+        sleepyFloat
+        3s
+        ease-in-out
+        infinite;
+}
+
+@keyframes sleepyFloat{
+
+    0%,100%{
+
+        transform:translateY(0);
+    }
+
+    50%{
+
+        transform:translateY(-8px);
+    }
+}
+
+.night-text{
+
+    margin-top:13px;
+
+    color:#858ebd;
+
+    font-size:.68rem;
+
+    letter-spacing:1px;
+}
+
+
+/* =====================================================
+   СТЕКЛЯННАЯ КАРТОЧКА
+===================================================== */
+
+.glass{
+
+    width:100%;
+
+    padding:22px 20px;
+
+    border-radius:27px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.075),
+            rgba(255,255,255,.035)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.10);
+
+    backdrop-filter:
+        blur(20px)
+        saturate(120%);
+
+    -webkit-backdrop-filter:
+        blur(20px)
+        saturate(120%);
+
+    box-shadow:
+
+        0 20px 70px
+        rgba(0,0,0,.22),
+
+        inset 0 1px 0
+        rgba(255,255,255,.06);
+}
+
+.message{
+
+    color:#d9dcf0;
+
+    font-size:.9rem;
+
+    line-height:1.75;
+
+    text-align:left;
+}
+
+.message p{
+
+    margin-bottom:14px;
+}
+
+.message p:last-child{
+
+    margin-bottom:0;
+}
+
+.nickname{
+
+    color:#ffabc5;
+
+    font-weight:600;
+}
+
+
+/* =====================================================
+   ЭКРАН 3 — СТИЧ + АНГЕЛ
+===================================================== */
+
+.stitch-card{
+
+    position:relative;
+
+    width:min(82vw,310px);
+
+    margin:18px auto 20px;
+
+    padding:10px;
+
+    border-radius:30px;
+
+    background:
+
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.13),
+            rgba(255,255,255,.035)
+        );
+
+    border:
+        1px solid
+        rgba(255,255,255,.14);
+
+    box-shadow:
+
+        0 25px 70px
+        rgba(0,0,0,.30),
+
+        0 0 60px
+        rgba(221,108,170,.13);
+
+    backdrop-filter:blur(15px);
+
+    overflow:hidden;
+
+    transform:rotate(-1deg);
+}
+
+.stitch-gif{
+
+    position:relative;
+
+    display:block;
+
+    width:100%;
+
+    height:auto;
+
+    max-height:250px;
+
+    object-fit:contain;
+
+    border-radius:23px;
+
+    z-index:2;
+}
+
+.photo-caption{
+
+    position:relative;
+
+    z-index:3;
+
+    margin-top:8px;
+
+    padding:4px 0 3px;
+
+    color:#d8d9ed;
+
+    font-family:Georgia,serif;
+
+    font-size:.78rem;
+
+    font-style:italic;
+}
+
+
+/* =====================================================
+   СЕРДЦЕ
+===================================================== */
+
+.love-cloud{
+
+    position:relative;
+
+    width:155px;
+    height:110px;
+
+    margin-top:-8px;
+
+    margin-bottom:10px;
+}
+
+.love-cloud span{
+
+    position:absolute;
+
+    font-size:1.55rem;
+
+    animation:
+        littleFloat
+        4s
+        ease-in-out
+        infinite;
+}
+
+.love-cloud span:nth-child(1){
+
+    top:0;
+    left:15px;
+}
+
+.love-cloud span:nth-child(2){
+
+    top:55px;
+    left:0;
+
+    animation-delay:1s;
+}
+
+.love-cloud span:nth-child(3){
+
+    top:15px;
+    right:4px;
+
+    animation-delay:.5s;
+}
+
+.love-cloud span:nth-child(4){
+
+    bottom:0;
+    right:28px;
+
+    animation-delay:1.5s;
+}
+
+.big-heart{
+
+    position:absolute;
+
+    top:50%;
+    left:50%;
+
+    transform:
+        translate(-50%,-50%);
+
+    font-size:3.9rem;
+
+    filter:
+        drop-shadow(
+            0 12px 35px
+            rgba(255,120,170,.25)
+        );
+
+    animation:
+        heartbeat
+        1.8s
+        ease-in-out
+        infinite;
+}
+
+@keyframes littleFloat{
+
+    0%,100%{
+
+        transform:
+            translateY(0)
+            rotate(-3deg);
+
+        opacity:.65;
+    }
+
+    50%{
+
+        transform:
+            translateY(-10px)
+            rotate(5deg);
+
+        opacity:1;
+    }
+}
+
+@keyframes heartbeat{
+
+    0%,100%{
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+    }
+
+    50%{
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.12);
+    }
+}
+
+
+/* =====================================================
+   ФИНАЛ
+===================================================== */
+
+.final-night{
+
+    margin-top:17px;
+
+    color:#fff;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:1.3rem;
+
+    line-height:1.65;
+}
+
+.signature{
+
+    margin-top:20px;
+
+    color:#ffabc5;
+
+    font-size:.88rem;
+
+    line-height:1.6;
+}
+
+.moon-button{
+
+    width:78px;
+    height:78px;
+
+    margin-top:23px;
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.13);
+
+    background:
+
+        radial-gradient(
+            circle at 35% 30%,
+            #fffef4,
+            #ded9b7
+        );
+
+    font-size:2rem;
+
+    cursor:pointer;
+
+    box-shadow:
+
+        0 0 35px
+        rgba(255,245,195,.17);
+
+    animation:
+        moonPulse
+        2.5s
+        ease-in-out
+        infinite;
+}
+
+.moon-button:active{
+
+    transform:scale(.9);
+}
+
+@keyframes moonPulse{
+
+    0%,100%{
+
+        box-shadow:
+            0 0 25px
+            rgba(255,245,195,.12);
+    }
+
+    50%{
+
+        box-shadow:
+            0 0 60px
+            rgba(255,245,195,.30);
+    }
+}
+
+.hidden-message{
+
+    display:none;
+
+    margin-top:17px;
+
+    color:#c9cde4;
+
+    font-size:.82rem;
+
+    line-height:1.6;
+
+    animation:
+        fadeIn
+        .7s
+        ease;
+}
+
+.hidden-message.show{
+
+    display:block;
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(10px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+    }
+}
+
+
+/* =====================================================
+   КНОПКА МУЗЫКИ
+===================================================== */
+
+.music-control{
+
+    position:absolute;
+
+    top:
+        max(
+            18px,
+            env(safe-area-inset-top)
+        );
+
+    left:18px;
+
+    width:43px;
+    height:43px;
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(255,255,255,.12);
+
+    background:
+        rgba(255,255,255,.06);
+
+    backdrop-filter:blur(12px);
+
+    color:#fff;
+
+    font-size:1rem;
+
+    display:none;
+
+    align-items:center;
+    justify-content:center;
+
+    z-index:50;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0,0,0,.18);
+
+    cursor:pointer;
+}
+
+.music-control.visible{
+
+    display:flex;
+
+    animation:
+        musicAppear
+        .6s ease;
+}
+
+@keyframes musicAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:scale(.7);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:scale(1);
+    }
+}
+
+.music-control.playing{
+
+    box-shadow:
+        0 0 25px
+        rgba(220,150,240,.25);
+}
+
+
+/* =====================================================
+   НИЖНИЙ ТЕКСТ
+===================================================== */
+
+.bottom-note{
+
+    position:absolute;
+
+    left:0;
+    right:0;
+
+    bottom:
+        max(
+            17px,
+            env(safe-area-inset-bottom)
+        );
+
+    color:#7079a9;
+
+    font-size:.61rem;
+
+    letter-spacing:.7px;
+
+    text-align:center;
+
+    z-index:30;
+
+    pointer-events:none;
+}
+
+
+/* =====================================================
+   ПЛАВАЮЩИЕ СЕРДЕЧКИ
+===================================================== */
+
+.floating-heart{
+
+    position:absolute;
+
+    bottom:-30px;
+
+    color:#ffabc5;
+
+    font-size:1rem;
+
+    opacity:0;
+
+    pointer-events:none;
+
+    animation:
+        rise
+        linear
+        infinite;
+}
+
+@keyframes rise{
+
+    0%{
+
+        transform:
+            translateY(0)
+            scale(.7);
+
+        opacity:0;
+    }
+
+    15%{
+
+        opacity:.35;
+    }
+
+    80%{
+
+        opacity:.15;
+    }
+
+    100%{
+
+        transform:
+            translateY(-110vh)
+            scale(1.2);
+
+        opacity:0;
+    }
+}
+
+
+/* =====================================================
+   МАЛЕНЬКИЕ ТЕЛЕФОНЫ
+===================================================== */
+
+@media(max-height:700px){
+
+    .moon{
+
+        width:105px;
+        height:105px;
+
+        top:42px;
+        right:-25px;
+    }
+
+    .moon::after{
+
+        width:105px;
+        height:105px;
+    }
+
+    .screen{
+
+        padding-top:65px;
+        padding-bottom:50px;
+    }
+
+    h1{
+
+        font-size:2.05rem;
+    }
+
+    h2{
+
+        font-size:1.65rem;
+    }
+
+    .subtitle{
+
+        font-size:.84rem;
+
+        line-height:1.55;
+    }
+
+    .glass{
+
+        padding:17px;
+    }
+
+    .message{
+
+        font-size:.82rem;
+
+        line-height:1.55;
+    }
+
+    .btn{
+
+        margin-top:19px;
+
+        min-height:50px;
+    }
+
+    .stitch-card{
+
+        width:min(76vw,270px);
+
+        margin-top:10px;
+
+        margin-bottom:10px;
+    }
+
+    .stitch-gif{
+
+        max-height:190px;
+    }
+
+    .love-cloud{
+
+        transform:scale(.8);
+
+        margin-top:-15px;
+
+        margin-bottom:-10px;
+    }
+
+    .final-night{
+
+        font-size:1.15rem;
+    }
+}
+
+
+@media(max-height:600px){
+
+    .small-label{
+
+        margin-bottom:8px;
+    }
+
+    .sleepy{
+
+        font-size:3rem;
+
+        margin-bottom:7px;
+    }
+
+    .subtitle{
+
+        margin-top:10px;
+    }
+
+    .night-text{
+
+        display:none;
+    }
+
+    .stitch-card{
+
+        width:230px;
+    }
+
+    .stitch-gif{
+
+        max-height:150px;
+    }
+
+    .final-night{
+
+        margin-top:10px;
+    }
+
+    .moon-button{
+
+        width:65px;
+        height:65px;
+
+        margin-top:15px;
+    }
+}
+
+
+@media(prefers-reduced-motion:reduce){
+
+    *,
+    *::before,
+    *::after{
+
+        animation-duration:.01ms !important;
+
+        animation-iteration-count:1 !important;
+
+        transition-duration:.01ms !important;
+    }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+    <!-- =================================================
+         ФОН
+    ================================================== -->
+
+    <div
+        class="stars"
+        id="stars"
+    ></div>
+
+    <div class="moon"></div>
+
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+
+    <div class="shooting-star"></div>
+    <div class="shooting-star"></div>
+
+    <div id="floatingHearts"></div>
+
+
+    <!-- =================================================
+         КНОПКА МУЗЫКИ
+    ================================================== -->
+
+    <button
+        class="music-control"
+        id="musicControl"
+        onclick="toggleMusic()"
+        aria-label="Музыка"
+    >
+        ♫
+    </button>
+
+
+    <!-- =================================================
+         АУДИО
+    ================================================== -->
+
+    <audio
+        id="nightForest"
+        src="night-forest.mp3"
+        loop
+        preload="auto"
+    ></audio>
+
+
+    <!-- =================================================
+         ЭКРАН 1
+    ================================================== -->
+
+    <section
+        class="screen active"
+        data-screen="1"
+    >
+
+        <div class="inner">
+
+            <div class="sleepy">
+                🌙
+            </div>
+
+            <div class="small-label">
+                Псс… Полиночка
+            </div>
+
+            <h1>
+
+                Доброй ночи,<br>
+
+                моя любимая
+                <span class="pink">
+                    🩷
+                </span>
+
+            </h1>
+
+            <p class="subtitle">
+
+                Все дела на сегодня можно<br>
+
+                отложить до завтра.
+
+                <br><br>
+
+                А сейчас тебе пора<br>
+
+                немножко отдохнуть. ✨
+
+            </p>
+
+            <button
+                class="btn"
+                onclick="
+                    startNightMusic();
+                    goToScreen(2);
+                "
+            >
+
+                У меня для тебя кое-что есть 🌙
+
+            </button>
+
+            <div class="night-text">
+
+                не закрывай глазки ещё пару секунд
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ЭКРАН 2
+    ================================================== -->
+
+    <section
+        class="screen"
+        data-screen="2"
+    >
+
+        <div class="inner">
+
+            <div class="small-label">
+                Немного от меня
+            </div>
+
+            <h2>
+                Перед сном…
+            </h2>
+
+            <div
+                class="glass"
+                style="margin-top:18px;"
+            >
+
+                <div class="message">
+
+                    <p>
+
+                        Полиночка, я просто хотел пожелать тебе
+
+                        <strong class="nickname">
+                            спокойной ночи
+                        </strong>.
+
+                        🌙
+
+                    </p>
+
+                    <p>
+
+                        Чтобы ты сегодня уснула с улыбкой,
+                        не думала ни о чём плохом
+                        и знала, что есть человек,
+                        который очень сильно тебя любит.
+
+                    </p>
+
+                    <p>
+
+                        Моя Лапочка,
+                        мой Оленёнок,
+                        мой Ветерок,
+                        моё Солнышко,
+                        моя Кисуля… 🩷
+
+                    </p>
+
+                    <p>
+
+                        Пусть тебе приснится что-нибудь
+                        очень красивое.
+
+                        А если вдруг там буду я —
+
+                        ну… значит сон удался 😏
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="btn"
+                onclick="goToScreen(3)"
+            >
+
+                Ещё чуть-чуть ❤️
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ЭКРАН 3
+    ================================================== -->
+
+    <section
+        class="screen"
+        data-screen="3"
+    >
+
+        <div class="inner">
+
+            <div class="small-label">
+                Самое главное
+            </div>
+
+
+            <div class="stitch-card">
+
+                <img
+                    class="stitch-gif"
+                    src="https://media.gifdb.com/stich-and-angel-kiss-heart-qt3uh4zfp9erw8e2.gif"
+                    alt="Стич и Ангел целуются"
+                >
+
+                <div class="photo-caption">
+
+                    маленькая любовь перед сном 🩷
+
+                </div>
+
+            </div>
+
+
+            <div class="love-cloud">
+
+                <span>✨</span>
+
+                <span>⭐</span>
+
+                <span>🌙</span>
+
+                <span>✨</span>
+
+                <div class="big-heart">
+                    ❤️
+                </div>
+
+            </div>
+
+
+            <h2>
+                Я рядом.
+            </h2>
+
+
+            <p class="subtitle">
+
+                Даже если сейчас между нами расстояние,
+                ты всё равно остаёшься
+                самой близкой мне девочкой.
+
+                <br><br>
+
+                Так что укутывайся потеплее,
+                закрывай свои красивые глазки
+                и отдыхай, моя хорошая. 🥺🩷
+
+            </p>
+
+
+            <button
+                class="btn"
+                onclick="goToScreen(4)"
+            >
+
+                Последняя страничка 🌙
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ЭКРАН 4
+    ================================================== -->
+
+    <section
+        class="screen"
+        data-screen="4"
+    >
+
+        <div class="inner">
+
+            <div class="small-label">
+                И последнее
+            </div>
+
+            <h2>
+
+                Спи сладко,<br>
+
+                моя Полиночка ❤️
+
+            </h2>
+
+
+            <div class="final-night">
+
+                Пусть ночь будет тихой,<br>
+
+                сон — самым сладким,<br>
+
+                а утро — самым добрым.
+
+            </div>
+
+
+            <div class="signature">
+
+                Я тебя очень люблю.<br>
+
+                Твой ❤️
+
+            </div>
+
+
+            <button
+                class="moon-button"
+                onclick="revealNight()"
+                aria-label="Открыть последнее сообщение"
+            >
+
+                🌙
+
+            </button>
+
+
+            <div
+                class="hidden-message"
+                id="nightMessage"
+            >
+
+                А теперь правда закрывай телефон 😏<br>
+
+                и спать.
+
+                <br><br>
+
+                Муа-мур ❤️
+
+            </div>
+
+
+            <button
+                class="btn"
+                id="restartButton"
+                style="display:none;"
+                onclick="location.reload()"
+            >
+
+                🌙 Ещё раз
+
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <div class="bottom-note">
+
+        для моей самой любимой девочки 🩷
+
+    </div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ
+===================================================== */
+
+let currentScreen = 1;
+
+function goToScreen(number){
+
+    if(number === currentScreen)
+        return;
+
+    const current =
+        document.querySelector(
+            `.screen[data-screen="${currentScreen}"]`
+        );
+
+    const next =
+        document.querySelector(
+            `.screen[data-screen="${number}"]`
+        );
+
+    if(!next)
+        return;
+
+    current.classList.remove("active");
+
+    setTimeout(()=>{
+
+        next.classList.add("active");
+
+    },40);
+
+    currentScreen = number;
+}
+
+
+/* =====================================================
+   НОЧНАЯ МУЗЫКА
+===================================================== */
+
+const nightForest =
+    document.getElementById(
+        "nightForest"
+    );
+
+const musicControl =
+    document.getElementById(
+        "musicControl"
+    );
+
+let musicStarted = false;
+
+
+/* =====================================================
+   ЗАПУСК
+===================================================== */
+
+async function startNightMusic(){
+
+    if(musicStarted)
+        return;
+
+    musicStarted = true;
+
+    try{
+
+        /*
+         * Начинаем очень тихо.
+         */
+
+        nightForest.volume = 0;
+
+        await nightForest.play();
+
+
+        /*
+         * Показываем кнопку управления.
+         */
+
+        musicControl.classList.add(
+            "visible"
+        );
+
+        musicControl.classList.add(
+            "playing"
+        );
+
+
+        /*
+         * Плавный fade-in.
+         */
+
+        fadeMusic(
+            0,
+            0.20,
+            5000
+        );
+
+    }
+
+    catch(error){
+
+        console.log(
+            "Музыка не запустилась:",
+            error
+        );
+
+        /*
+         * Если браузер заблокировал воспроизведение,
+         * кнопка всё равно позволит включить музыку.
+         */
+
+        musicStarted = false;
+    }
+}
+
+
+/* =====================================================
+   ПЛАВНОЕ ИЗМЕНЕНИЕ ГРОМКОСТИ
+===================================================== */
+
+function fadeMusic(
+    from,
+    to,
+    duration
+){
+
+    const start =
+        performance.now();
+
+    function animate(time){
+
+        const progress =
+            Math.min(
+                (time-start)/duration,
+                1
+            );
+
+        /*
+         * Плавная функция easing.
+         */
+
+        const eased =
+            progress *
+            progress *
+            (3 - 2*progress);
+
+        nightForest.volume =
+            from +
+            (to-from)*eased;
+
+        if(progress < 1){
+
+            requestAnimationFrame(
+                animate
+            );
+
+        }
+
+    }
+
+    requestAnimationFrame(
+        animate
+    );
+}
+
+
+/* =====================================================
+   ВКЛ / ВЫКЛ МУЗЫКИ
+===================================================== */
+
+async function toggleMusic(){
+
+    if(nightForest.paused){
+
+        try{
+
+            await nightForest.play();
+
+            fadeMusic(
+                0,
+                0.20,
+                1200
+            );
+
+            musicControl.classList.add(
+                "playing"
+            );
+
+        }
+
+        catch(error){
+
+            console.log(error);
+        }
+
+    }
+    else{
+
+        fadeMusic(
+            nightForest.volume,
+            0,
+            1000
+        );
+
+        setTimeout(()=>{
+
+            nightForest.pause();
+
+        },1000);
+
+        musicControl.classList.remove(
+            "playing"
+        );
+    }
+}
+
+
+/* =====================================================
+   ЗВЁЗДЫ
+===================================================== */
+
+function createStars(){
+
+    const container =
+        document.getElementById(
+            "stars"
+        );
+
+    const count =
+        window.innerHeight < 700
+        ? 42
+        : 62;
+
+    const fragment =
+        document.createDocumentFragment();
+
+    for(let i=0;i<count;i++){
+
+        const star =
+            document.createElement(
+                "div"
+            );
+
+        star.className =
+            "star";
+
+        star.style.left =
+            Math.random()*100 + "%";
+
+        star.style.top =
+            Math.random()*100 + "%";
+
+        const size =
+            Math.random()*2.2+.8;
+
+        star.style.width =
+            size + "px";
+
+        star.style.height =
+            size + "px";
+
+        star.style.animationDuration =
+            Math.random()*3+2 + "s";
+
+        star.style.animationDelay =
+            Math.random()*5 + "s";
+
+        fragment.appendChild(
+            star
+        );
+    }
+
+    container.appendChild(
+        fragment
+    );
+}
+
+
+/* =====================================================
+   ПЛАВАЮЩИЕ СЕРДЕЧКИ
+===================================================== */
+
+function createFloatingHearts(){
+
+    const container =
+        document.getElementById(
+            "floatingHearts"
+        );
+
+    const hearts = [
+        "♡",
+        "♡",
+        "✨",
+        "🩷"
+    ];
+
+    const fragment =
+        document.createDocumentFragment();
+
+    for(let i=0;i<10;i++){
+
+        const heart =
+            document.createElement(
+                "div"
+            );
+
+        heart.className =
+            "floating-heart";
+
+        heart.textContent =
+            hearts[
+                Math.floor(
+                    Math.random() *
+                    hearts.length
+                )
+            ];
+
+        heart.style.left =
+            Math.random()*100 + "%";
+
+        heart.style.fontSize =
+            (
+                Math.random()*.7+.6
+            ) + "rem";
+
+        heart.style.animationDuration =
+            (
+                Math.random()*12+15
+            ) + "s";
+
+        heart.style.animationDelay =
+            (
+                Math.random()*18
+            ) + "s";
+
+        fragment.appendChild(
+            heart
+        );
+    }
+
+    container.appendChild(
+        fragment
+    );
+}
+
+
+/* =====================================================
+   ФИНАЛЬНАЯ ЛУНА
+===================================================== */
+
+let revealed = false;
+
+function revealNight(){
+
+    if(revealed)
+        return;
+
+    revealed = true;
+
+    const message =
+        document.getElementById(
+            "nightMessage"
+        );
+
+    message.classList.add(
+        "show"
+    );
+
+    const button =
+        document.getElementById(
+            "restartButton"
+        );
+
+    button.style.display =
+        "block";
+
+    createLittleStars();
+}
+
+
+/* =====================================================
+   ФЕЙЕРВЕРК ЗВЁЗД
+===================================================== */
+
+function createLittleStars(){
+
+    for(let i=0;i<20;i++){
+
+        const star =
+            document.createElement(
+                "div"
+            );
+
+        star.textContent =
+            i%2===0
+            ? "✨"
+            : "⭐";
+
+        star.style.position =
+            "fixed";
+
+        star.style.left =
+            "50%";
+
+        star.style.top =
+            "48%";
+
+        star.style.zIndex =
+            "100";
+
+        star.style.fontSize =
+            Math.random()*.7+.6 +
+            "rem";
+
+        star.style.pointerEvents =
+            "none";
+
+        const angle =
+            Math.random() *
+            Math.PI *
+            2;
+
+        const distance =
+            Math.random()*130+50;
+
+        const x =
+            Math.cos(angle) *
+            distance;
+
+        const y =
+            Math.sin(angle) *
+            distance;
+
+        star.animate(
+
+            [
+
+                {
+                    transform:
+                        "translate(-50%,-50%) scale(.4)",
+
+                    opacity:0
+                },
+
+                {
+                    transform:
+                        "translate(-50%,-50%) scale(1)",
+
+                    opacity:1
+                },
+
+                {
+                    transform:
+                        `translate(
+                            calc(-50% + ${x}px),
+                            calc(-50% + ${y}px)
+                        )
+                        scale(.2)`,
+
+                    opacity:0
+                }
+
+            ],
+
+            {
+
+                duration:
+                    Math.random()*700+900,
+
+                easing:
+                    "cubic-bezier(.2,.8,.2,1)"
+            }
+        );
+
+        document.body.appendChild(
+            star
+        );
+
+        setTimeout(()=>{
+
+            star.remove();
+
+        },1800);
+    }
+}
+
+
+/* =====================================================
+   ЗАПУСК
+===================================================== */
+
+window.addEventListener(
+    "load",
+    ()=>{
+
+        createStars();
+
+        createFloatingHearts();
+
+    }
+);
+
+
+/* =====================================================
+   DOUBLE TAP
+===================================================== */
+
+document.addEventListener(
+    "dblclick",
+    event=>{
+
+        event.preventDefault();
+
+    },
+    {
+        passive:false
+    }
+);
+
+</script>
+
+</body>
+</html>
