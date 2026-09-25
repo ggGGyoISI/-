@@ -1,4 +1,4 @@
-"""Простое хранилище в JSON-файле: стиль канала, черновики, отложенные посты."""
+"""Простое хранилище в JSON-файле: стиль канала, черновики, отложенные посты, автопилот."""
 
 import json
 import secrets
@@ -6,6 +6,9 @@ from pathlib import Path
 from typing import Any
 
 MAX_SAMPLES = 30
+MAX_DRAFTS = 30
+MAX_SEEN_URLS = 1000
+MAX_RECENT = 30
 
 
 class Storage:
@@ -28,10 +31,21 @@ class Storage:
         u = self.data["users"].setdefault(str(user_id), {})
         u.setdefault("samples", [])
         u.setdefault("style_note", "")
+        u.setdefault("style_sources", [])  # каналы, пересланные посты из которых = примеры стиля
         u.setdefault("channel", "")
         u.setdefault("drafts", {})
         u.setdefault("ideas", [])
+        u.setdefault("images", True)
+        # автопилот
+        u.setdefault("auto", {"enabled": False, "publish": False, "posts": 0, "last_run": 0})
+        u.setdefault("watch", {})       # канал -> id последнего увиденного поста
+        u.setdefault("topics", [])      # темы для поиска новостей
+        u.setdefault("seen_urls", [])   # новости, которые уже видели
+        u.setdefault("recent", [])      # темы недавних постов, чтобы не повторяться
         return u
+
+    def user_ids(self) -> list[int]:
+        return [int(x) for x in self.data["users"]]
 
     # --- стиль ---
     def add_sample(self, user_id: int, text: str) -> int:
@@ -43,13 +57,21 @@ class Storage:
             self.save()
         return len(u["samples"])
 
+    # --- автопилот ---
+    def mark_seen(self, user_id: int, urls: list[str]) -> None:
+        u = self.user(user_id)
+        u["seen_urls"] = (u["seen_urls"] + urls)[-MAX_SEEN_URLS:]
+
+    def add_recent(self, user_id: int, topic: str) -> None:
+        u = self.user(user_id)
+        u["recent"] = (u["recent"] + [topic])[-MAX_RECENT:]
+
     # --- черновики ---
     def add_draft(self, user_id: int, draft: dict[str, Any]) -> str:
         u = self.user(user_id)
         draft_id = secrets.token_hex(4)
         u["drafts"][draft_id] = draft
-        # храним только последние 20 черновиков
-        for old in list(u["drafts"])[:-20]:
+        for old in list(u["drafts"])[:-MAX_DRAFTS]:
             del u["drafts"][old]
         self.save()
         return draft_id
@@ -60,6 +82,12 @@ class Storage:
     def delete_draft(self, user_id: int, draft_id: str) -> None:
         self.user(user_id)["drafts"].pop(draft_id, None)
         self.save()
+
+    def used_images(self) -> set[str]:
+        used = {x.get("image") for x in self.data["scheduled"]}
+        for u in self.data["users"].values():
+            used |= {d.get("image") for d in u.get("drafts", {}).values()}
+        return {x for x in used if x}
 
     # --- отложенные публикации ---
     def schedule(self, item: dict[str, Any]) -> None:

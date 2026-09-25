@@ -27,7 +27,7 @@ class Source:
     text: str = ""
 
 
-def _ddg(query: str, region: str, news: bool, timelimit: str | None) -> list[dict]:
+def ddg_search(query: str, region: str, news: bool, timelimit: str | None) -> list[dict]:
     try:
         with DDGS() as d:
             if news:
@@ -41,8 +41,8 @@ def _ddg(query: str, region: str, news: bool, timelimit: str | None) -> list[dic
 async def search(queries: list[str], region: str, timelimit: str | None = None) -> list[Source]:
     tasks = []
     for q in queries:
-        tasks.append(asyncio.to_thread(_ddg, q, region, True, timelimit or "m"))
-        tasks.append(asyncio.to_thread(_ddg, q, region, False, timelimit))
+        tasks.append(asyncio.to_thread(ddg_search, q, region, True, timelimit or "m"))
+        tasks.append(asyncio.to_thread(ddg_search, q, region, False, timelimit))
     results = await asyncio.gather(*tasks)
 
     seen: set[str] = set()
@@ -77,10 +77,17 @@ async def _fetch_text(client: httpx.AsyncClient, url: str) -> str:
         return ""
 
 
-async def research(queries: list[str], region: str, timelimit: str | None = None) -> list[Source]:
-    """Ищет по запросам и дочитывает первые страницы целиком."""
-    sources = await search(queries, region, timelimit)
-    top = sources[:FETCH_PAGES]
+async def research(queries: list[str], region: str, timelimit: str | None = None,
+                   pinned: list[Source] | None = None) -> list[Source]:
+    """Ищет по запросам и дочитывает первые страницы целиком.
+
+    pinned — источники, которые обязательно идут первыми (например, исходная новость).
+    """
+    pinned = pinned or []
+    pinned_urls = {s.url for s in pinned}
+    found = await search(queries, region, timelimit) if queries else []
+    sources = pinned + [s for s in found if s.url not in pinned_urls]
+    top = [s for s in sources[:FETCH_PAGES] if not s.text and s.url.startswith("http")]
     async with httpx.AsyncClient(
         timeout=15, follow_redirects=True, headers={"User-Agent": USER_AGENT}
     ) as client:
