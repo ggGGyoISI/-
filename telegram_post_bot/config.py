@@ -35,6 +35,8 @@ class Config:
     cf_account_id: str
     cf_api_token: str
     cf_image_model: str
+    pexels_key: str
+    image_title: bool
     font_path: str
     # автопилот
     auto_interval_min: int
@@ -62,14 +64,16 @@ def load_config() -> Config:
         max_post_chars=min(int(_env("MAX_POST_CHARS", "2500")), 4000),
         data_file=BASE_DIR / "data" / "state.json",
         images_dir=BASE_DIR / "data" / "images",
-        image_provider=_env("IMAGE_PROVIDER", "pollinations").lower(),
+        image_provider=_env("IMAGE_PROVIDER", "auto").lower().replace(" ", ""),
         image_style=_env("IMAGE_STYLE", "modern digital illustration, vibrant colors, high detail, no text, no letters"),
         pollinations_url=_env("POLLINATIONS_URL", "https://gen.pollinations.ai/image/"),
         pollinations_key=_env("POLLINATIONS_KEY"),
         pollinations_model=_env("POLLINATIONS_MODEL"),
         cf_account_id=_env("CF_ACCOUNT_ID"),
         cf_api_token=_env("CF_API_TOKEN"),
-        cf_image_model=_env("CF_IMAGE_MODEL", "@cf/black-forest-labs/flux-1-schnell"),
+        cf_image_model=_env("CF_IMAGE_MODEL", "@cf/black-forest-labs/flux-2-klein-4b"),
+        pexels_key=_env("PEXELS_API_KEY"),
+        image_title=_env("IMAGE_TITLE", "off").lower() in ("1", "on", "true", "yes", "да"),
         font_path=_env("FONT_PATH"),
         auto_interval_min=max(10, int(_env("AUTO_INTERVAL_MIN", "60"))),
         auto_posts_per_run=max(1, int(_env("AUTO_POSTS_PER_RUN", "2"))),

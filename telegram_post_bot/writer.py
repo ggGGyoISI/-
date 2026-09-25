@@ -14,10 +14,11 @@ FORMAT_RULES = """Форматирование — HTML для Telegram. Раз�
 Никакого Markdown (**, __, #), никаких <p>, <br>, <ul>, <li>, <h1>. Переносы строк — обычные.
 Эмодзи — только если они есть в стиле канала."""
 
-IMAGE_RULE = """После текста поста добавь последнюю отдельную строку:
-IMAGE_PROMPT: <описание иллюстрации к посту на английском, 15–40 слов: что изображено, сцена, настроение; без текста и надписей на картинке>"""
+IMAGE_RULE = """После текста поста добавь две последние отдельные строки:
+IMAGE_PROMPT: <описание обложки к посту на английском, 15–40 слов: главный объект, сцена, ракурс, освещение, настроение; без текста и надписей на картинке>
+IMAGE_QUERY: <2–4 английских ключевых слова для поиска подходящего фото на фотостоке>"""
 
-_IMAGE_LINE = re.compile(r"^\s*\**\s*IMAGE[_ ]PROMPT\s*\**\s*:\s*(.+?)\s*$", re.I | re.M)
+_IMAGE_LINE = re.compile(r"^\s*\**\s*IMAGE[_ ](PROMPT|QUERY)\s*\**\s*:\s*\**\s*(.+?)\s*$", re.I | re.M)
 
 
 class Writer:
@@ -76,8 +77,8 @@ class Writer:
         edit_request: str = "",
         rewrite_source: str = "",
         want_image_prompt: bool = False,
-    ) -> tuple[str, str]:
-        """Возвращает (текст поста в HTML, промпт для картинки)."""
+    ) -> tuple[str, str, str]:
+        """Возвращает (текст поста в HTML, описание картинки, ключевые слова для фотостока)."""
         today = datetime.now().strftime("%d.%m.%Y")
         system = (
             "Ты — автор Telegram-канала. Пишешь посты строго в стилистике канала.\n\n"
@@ -111,17 +112,17 @@ class Writer:
                 else "Напиши другой вариант — с другим заходом и подачей."
             )
 
-        text, image_prompt = _split_image_prompt(await self._chat(system, user))
+        text, image_prompt, image_query = _split_image_lines(await self._chat(system, user))
         text = sanitize_html(_strip_fences(text))
 
         if visible_length(text) > 4000:
-            shorter, _ = _split_image_prompt(await self._chat(
+            shorter, _, _ = _split_image_lines(await self._chat(
                 system,
                 f"Сократи этот пост до {self.max_chars} символов, сохранив стиль и HTML-теги:\n\n{text}",
                 temperature=0.3,
             ))
             text = sanitize_html(_strip_fences(shorter))
-        return text, image_prompt
+        return text, image_prompt, image_query
 
     async def pick(self, candidates: list[str], recent: list[str], topics: list[str],
                    style_note: str, limit: int) -> list[int]:
@@ -173,12 +174,12 @@ def _json_list(raw: str) -> list:
     return value if isinstance(value, list) else []
 
 
-def _split_image_prompt(text: str) -> tuple[str, str]:
-    matches = list(_IMAGE_LINE.finditer(text))
-    if not matches:
-        return text, ""
-    prompt = matches[-1].group(1).strip().strip("<>\"'")
-    return _IMAGE_LINE.sub("", text).strip(), prompt
+def _split_image_lines(text: str) -> tuple[str, str, str]:
+    """Отделяет от поста строки IMAGE_PROMPT / IMAGE_QUERY."""
+    found = {"prompt": "", "query": ""}
+    for m in _IMAGE_LINE.finditer(text):
+        found[m.group(1).lower()] = m.group(2).strip("*<>\"' ")
+    return _IMAGE_LINE.sub("", text).strip(), found["prompt"], found["query"]
 
 
 def _strip_fences(text: str) -> str:

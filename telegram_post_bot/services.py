@@ -57,7 +57,7 @@ async def create_draft(
     """Пишет пост (+ картинку) и сохраняет черновик. Бросает openai.APIError."""
     u = storage.user(user_id)
     want_image = images_on(user_id)
-    text, image_prompt = await writer.write_post(
+    text, image_prompt, image_query = await writer.write_post(
         topic, sources, u["samples"], u["style_note"],
         previous=previous["text"] if previous else "",
         edit_request=edit_request,
@@ -70,9 +70,11 @@ async def create_draft(
     image = None
     if previous and previous.get("image"):
         # при правках оставляем прежнюю картинку; новую можно сделать кнопкой
-        image, image_prompt = previous["image"], previous.get("image_prompt") or image_prompt
+        image = previous["image"]
+        image_prompt = previous.get("image_prompt") or image_prompt
+        image_query = previous.get("image_query") or image_query
     elif want_image:
-        image = await images.make(image_prompt or topic, to_plain(text).split("\n")[0][:120] or topic)
+        image = await images.make(image_prompt or topic, post_title(text, topic), image_query)
 
     return storage.add_draft(user_id, {
         "topic": topic,
@@ -82,7 +84,14 @@ async def create_draft(
         "origin": origin,
         "image": image,
         "image_prompt": image_prompt or topic,
+        "image_query": image_query,
     })
+
+
+def post_title(text: str, fallback: str = "") -> str:
+    """Первая строка поста — заголовок для обложки."""
+    plain = to_plain(text)
+    return next((x.strip() for x in plain.splitlines() if x.strip()), fallback)[:120] or fallback
 
 
 async def send_text(bot: Bot, chat_id: int | str, text: str, **kw) -> Message:
@@ -122,12 +131,14 @@ def draft_kb(draft_id: str, has_image: bool):
     kb.button(text="🕒 Запланировать", callback_data=f"sch:{draft_id}")
     kb.button(text="🔄 Другой вариант", callback_data=f"re:{draft_id}")
     kb.button(text="✏️ Правки", callback_data=f"ed:{draft_id}")
-    kb.button(text="🖼 Новая картинка" if has_image else "🖼 Добавить картинку",
+    kb.button(text="🎨 Новая картинка" if has_image else "🎨 Добавить картинку",
               callback_data=f"img:{draft_id}")
+    if images.has_pexels:
+        kb.button(text="📷 Фото со стока", callback_data=f"photo:{draft_id}")
     if has_image:
         kb.button(text="🚫 Без картинки", callback_data=f"noimg:{draft_id}")
     kb.button(text="🗑 Удалить", callback_data=f"del:{draft_id}")
-    kb.adjust(2, 2, 2, 1)
+    kb.adjust(2, 2, 2, 2)
     return kb.as_markup()
 
 

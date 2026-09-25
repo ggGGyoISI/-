@@ -20,8 +20,8 @@ from autopilot import autopilot_loop, run_cycle
 from formatting import to_plain
 from search import Source, research
 from services import (
-    cfg, create_draft, images, images_on, llm_error_text, publish, send_draft, send_text,
-    storage, user_channel, writer,
+    cfg, create_draft, images, images_on, llm_error_text, post_title, publish, send_draft,
+    send_text, storage, user_channel, writer,
 )
 from tgchannels import fetch_posts, http_client, only_channels, parse_channels
 
@@ -58,7 +58,7 @@ HELP = """<b>Что я умею</b>
 • <code>/style</code> описание — например «коротко, с иронией, без эмодзи»;
 • <code>/clearstyle</code> — забыть стиль.
 
-🖼 <b>Картинки</b> — <code>/images on|off</code>. Под черновиком есть кнопка «Новая картинка».
+🖼 <b>Картинки</b> — <code>/images on|off</code>. Под черновиком кнопки «🎨 Новая картинка» и «📷 Фото со стока».
 
 💡 <b>Идеи</b> — <code>/ideas тематика</code>: предложу темы по свежим новостям.
 
@@ -67,7 +67,7 @@ HELP = """<b>Что я умею</b>
 • под каждым черновиком: опубликовать, запланировать, переписать, правки;
 • <code>/queue</code> — отложенные посты.
 
-Всё бесплатно: поиск — DuckDuckGo, каналы — веб-версия Telegram, тексты — бесплатная нейросеть, картинки — Pollinations."""
+Всё бесплатно: поиск — DuckDuckGo, каналы — веб-версия Telegram, тексты — бесплатная нейросеть, картинки — FLUX.2 (Cloudflare), фото Pexels или Pollinations."""
 
 
 # ---------- помощники ----------
@@ -372,7 +372,7 @@ async def cb_idea(call: CallbackQuery):
         await generate(call.message, call.from_user.id, ideas[i])
 
 
-@router.callback_query(F.data.regexp(r"^(pub|sch|re|ed|del|img|noimg):"))
+@router.callback_query(F.data.regexp(r"^(pub|sch|re|ed|del|img|photo|noimg):"))
 async def cb_draft(call: CallbackQuery):
     action, draft_id = call.data.split(":", 1)
     user_id = call.from_user.id
@@ -407,11 +407,15 @@ async def cb_draft(call: CallbackQuery):
         pending[user_id] = ("edit", draft_id)
         await call.answer()
         await call.message.answer("✏️ Напиши, что поправить (например: «короче, добавь вывод в конце»).")
-    elif action == "img":
-        await call.answer("Рисую…")
-        status = await call.message.answer("🖼 Рисую новую картинку…")
-        draft["image"] = await images.make(draft.get("image_prompt") or draft["topic"],
-                                           to_plain(draft["text"]).split("\n")[0][:120])
+    elif action in ("img", "photo"):
+        await call.answer()
+        status = await call.message.answer("🎨 Рисую новую картинку…" if action == "img"
+                                           else "📷 Ищу фото на фотостоке…")
+        providers = ["pexels"] if action == "photo" else None
+        draft["image"] = await images.make(
+            draft.get("image_prompt") or draft["topic"], post_title(draft["text"], draft["topic"]),
+            draft.get("image_query") or "", providers=providers,
+        )
         storage.save()
         await status.delete()
         await send_draft(call.bot, call.message.chat.id, user_id, draft_id, with_sources=False)
